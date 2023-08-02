@@ -8,7 +8,6 @@ import {
   doc,
   onSnapshot,
   updateDoc,
-  increment,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
@@ -47,10 +46,17 @@ export default function UsersList() {
     await deleteDoc(doc(db, "users", id));
   };
 
-  const onIncreaseAgeHandler = async (id) => {
-    const increaseAgeDoc = doc(db, "users", id);
-    await updateDoc(increaseAgeDoc, {
-      age: increment(1),
+  const onIncreaseAgeHandler = async (id, age) => {
+    const userDoc = doc(db, "users", id);
+    await updateDoc(userDoc, {
+      age: age + 1,
+    });
+  };
+
+  const onDecreaseAgeHandler = async (id, age) => {
+    const userDoc = doc(db, "users", id);
+    await updateDoc(userDoc, {
+      age: age - 1,
     });
   };
 
@@ -64,20 +70,32 @@ export default function UsersList() {
       <ul className="flex flex-col gap-3">
         {users.map((user) => (
           <li key={user.id} className="flex gap-5 mx-auto w-fit">
-            <button
-              className="grid w-6 h-6 border border-black rounded-full "
-              onClick={() => onDeleteHandler(user.id)}
-            >
-              X
-            </button>
+            {users.length > 1 && (
+              <button
+                className="grid w-6 h-6 border border-black rounded-full "
+                onClick={() => onDeleteHandler(user.id)}
+              >
+                X
+              </button>
+            )}
+
             <p>Name: {user.name}</p>
             <p>Age: {user.age}</p>
-            <button
-              className="grid px-6 border border-black rounded-full "
-              onClick={() => onIncreaseAgeHandler(user.id)}
-            >
-              Increase Age
-            </button>
+            <div className="flex gap-2">
+              {" "}
+              <button
+                className="grid px-3 border border-black rounded-full "
+                onClick={() => onIncreaseAgeHandler(user.id, user.age)}
+              >
+                + Age
+              </button>
+              <button
+                className="grid px-3 border border-black rounded-full "
+                onClick={() => onDecreaseAgeHandler(user.id, user.age)}
+              >
+                - Age
+              </button>
+            </div>
           </li>
         ))}
       </ul>
