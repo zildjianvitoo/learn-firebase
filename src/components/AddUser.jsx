@@ -1,5 +1,5 @@
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
+import { collection, addDoc } from "firebase/firestore";
 import { db } from "../config/firebase";
 
 export default function AddUser() {
